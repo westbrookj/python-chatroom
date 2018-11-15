@@ -129,9 +129,10 @@ clients who's object is not the same as the one sending
 the message """
 def broadcast(message, connection): 
     print(chatroomList)
-	for (client, username) in chatroomList: 
+    
+    for (client, username) in chatroomList: 
         print(client + " -> " + username)
-		if client != connection: 
+        if client != connection: 
 			try: 
 				client.send(message) 
 			except: 
