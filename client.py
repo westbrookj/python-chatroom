@@ -26,8 +26,8 @@ while True:
             print("Invalid command.\nSyntax: login <username> <password>")
             continue
 
+        check = True
         while True:
-            check = True
             if not check:
                 break
             else:
