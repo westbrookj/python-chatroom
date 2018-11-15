@@ -65,6 +65,7 @@ def clientthread(conn, addr):
                 print(message)
                 command = message.split(' ', 5)
                 print(command)
+                
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("|login-syntaxerror")
@@ -92,7 +93,7 @@ def clientthread(conn, addr):
 #                            conn.close()
                             
                     print(chatroomList)
-                elif command[0] == "|who":
+                elif command[0] == "|who" or command[0] == "who":
                     whoList = ""
                     for (conn, username) in chatroomList:
                         if whoList == "":
@@ -105,14 +106,14 @@ def clientthread(conn, addr):
                     else:
                         conn.send(whoList)
                 else:
-                    if conn in chatroomList:
-                        """prints the message and address of the 
-                        user who just sent the message on the server 
-                        terminal"""
-                        print("<" + username + "> " + message)
+#                    if conn in chatroomList:
+                    """prints the message and address of the 
+                    user who just sent the message on the server 
+                    terminal"""
+                    print("<" + username + "> " + message)
 
-                        # Calls broadcast function to send message to all 
-                        broadcast("<" + username + "> " + message , conn) 
+                    # Calls broadcast function to send message to all 
+                    broadcast("<" + username + "> " + message , conn) 
 
             else: 
                 """message may have no content if the connection 
