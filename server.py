@@ -62,9 +62,9 @@ def clientthread(conn, addr):
             message = conn.recv(2048) 
             if message:
                 message = message.strip("\n")
-                print(message)
+#                print(message)
                 command = message.split(' ', 5)
-                print(command)
+#                print(command)
                 
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
@@ -82,7 +82,7 @@ def clientthread(conn, addr):
                                 else:
                                     username = command[1]
                                     chatroomList.append((conn, username))
-                                    print(chatroomList)
+#                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom")
                                     conn.send("Welcome to the Chat Room!")
@@ -128,10 +128,7 @@ def clientthread(conn, addr):
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-    print(chatroomList)
-    
     for (client,username) in chatroomList: 
-#        print(client + " -> " + username)
         if client != connection: 
 			try: 
 				client.send(message) 

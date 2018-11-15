@@ -3,14 +3,12 @@ import socket
 import select 
 import sys 
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-#if len(sys.argv) != 3: 
-#	print "Correct usage: script, IP address, port number"
-#	exit() 
 IP_address = "192.168.1.10"
 Port = 12905
 
 while True:
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+    
     print("Please enter a command. Type 'help' to see available commands.")
     command = sys.stdin.readline()
 #    command = command.strip('\n')
