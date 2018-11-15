@@ -2,6 +2,7 @@
 import socket 
 import select 
 import sys 
+import csv
 from thread import *
 
 """The first argument AF_INET is the address domain of the 
@@ -13,15 +14,29 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
 
 # checks whether sufficient arguments have been provided 
-if len(sys.argv) != 3: 
-	print "Correct usage: script, IP address, port number"
-	exit() 
+#if len(sys.argv) != 3: 
+#	print "Correct usage: script, IP address, port number"
+#	exit() 
 
 # takes the first argument from command prompt as IP address 
-IP_address = str(sys.argv[1]) 
+IP_address = "192.168.1.10" 
 
 # takes second argument from command prompt as port number 
-Port = int(sys.argv[2]) 
+Port = 12905 
+
+credentials = {}
+with open('credentials.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            credentials[str(row[0])] = str(row[1])
+            line_count += 1
+    print(row[0] + " : " + row[1])
+    
+print(credentials)
 
 """ 
 binds the server to an entered IP address and at the 
@@ -36,18 +51,26 @@ increased as per convenience.
 """
 server.listen(100) 
 
-list_of_clients = [] 
+clientList = [] 
+chatroomList = []
 
 def clientthread(conn, addr): 
 
-	# sends a message to the client whose user object is conn 
-	conn.send("Welcome to this chatroom!") 
+	inChatroom = false
 
+    
+    
 	while True: 
 			try: 
 				message = conn.recv(2048) 
-				if message: 
-
+				if message:
+                    command = message.split(' ', 3)
+                    if command[0] == "login":
+                        
+                        if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
+                            conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
+                        else:
+                            
 					"""prints the message and address of the 
 					user who just sent the message on the server 
 					terminal"""
@@ -69,7 +92,7 @@ def clientthread(conn, addr):
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-	for clients in list_of_clients: 
+	for clients in clientList: 
 		if clients!=connection: 
 			try: 
 				clients.send(message) 
@@ -83,8 +106,8 @@ def broadcast(message, connection):
 from the list that was created at the beginning of 
 the program"""
 def remove(connection): 
-	if connection in list_of_clients: 
-		list_of_clients.remove(connection) 
+	if connection in clientList: 
+		clientList.remove(connection) 
 
 while True: 
 
@@ -96,7 +119,7 @@ while True:
 
 	"""Maintains a list of clients for ease of broadcasting 
 	a message to all available people in the chatroom"""
-	list_of_clients.append(conn) 
+	clientList.append(conn) 
 
 	# prints the address of the user that just connected 
 	print addr[0] + " connected"
