@@ -18,12 +18,15 @@ while True:
 
     if command[0] == "login":
         try:
-            if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
-                print("Invalid command.\nSyntax: login <username> <password>")
-                break
-            else:
+            if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
                 server.connect((IP_address, Port))
                 server.send("|login " + str(command[1]) + str(command[2]))
+            else:
+                print("Invalid command.\nSyntax: login <username> <password>")
+                continue
+        except:
+            print("Invalid command.\nSyntax: login <username> <password>")
+            continue
 
         while True:
             sockets_list = [sys.stdin, server]
