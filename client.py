@@ -21,10 +21,12 @@ while True:
             print("Invalid command.\nSyntax: login <username> <password>")
         else:
             server.connect((IP_address, Port))
-            server.send("|login " + command[1] + command[2])
+            server.send("|login " + str(command[1]) + str(command[2]))
+            
             while True:
                 sockets_list = [sys.stdin, server]
                 read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
+                
                 for socks in read_sockets: 
                     if socks == server: 
                         message = socks.recv(2048) 
