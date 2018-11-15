@@ -114,7 +114,7 @@ def clientthread(conn, addr):
                     print("<" + username + "> " + message)
 
                     # Calls broadcast function to send message to all 
-                    broadcast("<" + username + "> " + message , conn) 
+                    broadcast("<" + username + "> " + message, conn) 
 
             else: 
                 """message may have no content if the connection 
