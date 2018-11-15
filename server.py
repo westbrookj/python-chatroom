@@ -55,35 +55,40 @@ MAXCLIENTS = 3
 
 def clientthread(conn, addr):
     
+    username = None
+    
     while True: 
         try: 
             message = conn.recv(2048) 
             if message:
                 message = message.strip("\n")
-                print(message)
                 command = message.split(' ', 3)
-                print(command)
-                if command[0] == "login":
+                if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
-                        conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
+                        conn.send("|login-syntaxerror")
+                        conn.close()
                     else:
                         if str(command[1]) in credentials:
                             if credentials[str(command[1])] == str(command[2]):
                                 if str(command[1]) in chatroomList:
-                                    conn.send("User already logged in")
+                                    conn.send("|login-useralreadyloggedin")
+                                    conn.close()
                                 if len(chatroomList) >= MAXCLIENTS:
-                                    conn.send("Chatroom is full")
+                                    conn.send("|login-chatroomfull")
+                                    conn.close()
                                 else:
-                                    chatroomList.append((conn, command[1]))
-                                    
+                                    username = command[1]
+                                    chatroomList.append((conn, username))
+                                    print(username + " has entered the chatroom")
+                                    broadcast(username + " has entered the chatroom")
                                     conn.send("Welcome to the Chat Room!")
                             else:
-                                conn.send("Incorrect Password!")
+                                conn.send("|login-incorrectpassword")
                         else:
-                            conn.send("User does not exist!")
+                            conn.send("|login-userdne")
                             
                     print(chatroomList)
-                elif command[0] == "who":
+                elif command[0] == "|who":
                     whoList = ""
                     for (conn, username) in chatroomList:
                         if whoList == "":
@@ -99,11 +104,10 @@ def clientthread(conn, addr):
                     """prints the message and address of the 
                     user who just sent the message on the server 
                     terminal"""
-                    print "<" + addr[0] + "> " + message 
+                    print("<" + username + "> " + message)
 
                     # Calls broadcast function to send message to all 
-                    message_to_send = "<" + addr[0] + "> " + message 
-                    broadcast(message_to_send, conn) 
+                    broadcast("<" + username + "> " + message , conn) 
 
             else: 
                 """message may have no content if the connection 
@@ -147,7 +151,7 @@ while True:
 	clientList.append(conn) 
 
 	# prints the address of the user that just connected 
-	print addr[0] + " connected"
+#	print addr[0] + " connected"
 
 	# creates and individual thread for every user 
 	# that connects 
