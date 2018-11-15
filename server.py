@@ -130,8 +130,8 @@ the message """
 def broadcast(message, connection): 
     print(chatroomList)
     
-    for (client,username) in chatroomList: 
-        print(client + " -> " + username)
+    for client in chatroomList: 
+#        print(client + " -> " + username)
         if client != connection: 
 			try: 
 				client.send(message) 
