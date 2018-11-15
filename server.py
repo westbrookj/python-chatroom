@@ -51,8 +51,10 @@ server.listen(100)
 
 clientList = [] 
 chatroomList = []
+MAXCLIENTS = 3
 
-def clientthread(conn, addr): 
+def clientthread(conn, addr):
+    
     while True: 
         try: 
             message = conn.recv(2048) 
@@ -61,15 +63,44 @@ def clientthread(conn, addr):
                 if command[0] == "login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
-                    
-                """prints the message and address of the 
-                user who just sent the message on the server 
-                terminal"""
-                print "<" + addr[0] + "> " + message 
+                    else:
+                        if str(command[1]) in credentials:
+                            if credentials[str(command[1])] == str(command[2]):
+                                if str(command[1]) in chatroomList:
+                                    conn.send("User already logged in")
+                                if len(chatroomList) >= MAXCLIENTS:
+                                    conn.send("Chatroom is full")
+                                else:
+                                    chatroomList.append((conn, command[1]))
+                                    
+                                    conn.send("Welcome to the Chat Room!")
+                            else:
+                                conn.send("Incorrect Password!")
+                        else:
+                            conn.send("User does not exist!")
+                            
+                    print(chatroomList)
+                elif command[0] == "who":
+                    whoList = ""
+                    for (conn, username) in chatroomList:
+                        if whoList == "":
+                            whoList += username
+                        else:
+                            whoList += ", " + username
+                        
+                    if whoList == "":
+                        conn.send("The chatroom is empty!")
+                    else:
+                        conn.send(whoList)
+                elif conn in chatroomList: 
+                    """prints the message and address of the 
+                    user who just sent the message on the server 
+                    terminal"""
+                    print "<" + addr[0] + "> " + message 
 
-                # Calls broadcast function to send message to all 
-                message_to_send = "<" + addr[0] + "> " + message 
-                broadcast(message_to_send, conn) 
+                    # Calls broadcast function to send message to all 
+                    message_to_send = "<" + addr[0] + "> " + message 
+                    broadcast(message_to_send, conn) 
 
             else: 
                 """message may have no content if the connection 
@@ -83,15 +114,15 @@ def clientthread(conn, addr):
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-	for clients in clientList: 
-		if clients!=connection: 
+	for (client, username) in chatroomList: 
+		if client != connection: 
 			try: 
-				clients.send(message) 
+				client.send(message) 
 			except: 
-				clients.close() 
+				client.close() 
 
 				# if the link is broken, we remove the client 
-				remove(clients) 
+				remove(client) 
 
 """The following function simply removes the object 
 from the list that was created at the beginning of 
