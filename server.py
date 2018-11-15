@@ -58,35 +58,31 @@ def clientthread(conn, addr):
 
 	inChatroom = false
 
-    
-    
 	while True: 
-			try: 
-				message = conn.recv(2048) 
-				if message:
-                    command = message.split(' ', 3)
-                    if command[0] == "login":
-                        
-                        if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
-                            conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
-                        else:
-                            
-					"""prints the message and address of the 
-					user who just sent the message on the server 
-					terminal"""
-					print "<" + addr[0] + "> " + message 
+        try: 
+            message = conn.recv(2048) 
+            if message:
+                command = message.split(' ', 3)
+                if command[0] == "login":
+                    if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
+                        conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
+                    
+                """prints the message and address of the 
+                user who just sent the message on the server 
+                terminal"""
+                print "<" + addr[0] + "> " + message 
 
-					# Calls broadcast function to send message to all 
-					message_to_send = "<" + addr[0] + "> " + message 
-					broadcast(message_to_send, conn) 
+                # Calls broadcast function to send message to all 
+                message_to_send = "<" + addr[0] + "> " + message 
+                broadcast(message_to_send, conn) 
 
-				else: 
-					"""message may have no content if the connection 
-					is broken, in this case we remove the connection"""
-					remove(conn) 
+            else: 
+                """message may have no content if the connection 
+                is broken, in this case we remove the connection"""
+                remove(conn) 
 
-			except: 
-				continue
+        except: 
+            continue
 
 """Using the below function, we broadcast the message to all 
 clients who's object is not the same as the one sending 
