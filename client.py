@@ -35,32 +35,36 @@ while True:
                     message = socks.recv(2048)
                     if message == "|login-syntaxerror":
                         print("Invalid command.\nSyntax: login <username> <password>")
-#                        server.close()
+                        server.close()
                         break
                     elif message == "|login-useralreadyloggedin":
                         print("User is already logged into the chatroom!")
-#                        server.close()
+                        server.close()
                         break
                     elif message == "|login-chatroomfull":
                         print("The chatroom is full!")
-#                        server.close()
+                        server.close()
                         break
                     elif message == "|login-incorrectpassword":
                         print("Incorrect password.")
-#                        server.close()
+                        server.close()
                         break
                     elif message == "|login-userdne":
                         print("The specified user does not exist!")
-#                        server.close()
+                        server.close()
                         break
                     else:
                         print(message)
                 else:
                     message = sys.stdin.readline() 
-                    server.send(message) 
-                    sys.stdout.write("<You>") 
-                    sys.stdout.write(message) 
-                    sys.stdout.flush() 
+                    if message == "logout":
+                        server.close()
+                        break
+                    else:
+                        server.send(message) 
+                        sys.stdout.write("<You>") 
+                        sys.stdout.write(message) 
+                        sys.stdout.flush() 
 
 #while True: 
 #
