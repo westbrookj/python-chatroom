@@ -56,6 +56,8 @@ while True:
                         print("The specified user does not exist!")
                         server.close()
                         break
+                    else:
+                        print(message)
                 else:
                     message = sys.stdin.readline() 
                     server.send(message) 
