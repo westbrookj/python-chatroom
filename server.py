@@ -55,9 +55,6 @@ clientList = []
 chatroomList = []
 
 def clientthread(conn, addr): 
-
-	inChatroom = false
-
 	while True: 
         try: 
             message = conn.recv(2048) 
