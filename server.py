@@ -29,11 +29,9 @@ with open('credentials.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     for row in csv_reader:
-        if line_count == 0:
-            line_count += 1
-        else:
-            credentials[str(row[0])] = str(row[1])
-            line_count += 1
+        credentials[str(row[0])] = str(row[1])
+        line_count += 1
+    
     print(row[0] + " : " + row[1])
     
 print(credentials)
