@@ -59,7 +59,9 @@ def clientthread(conn, addr):
         try: 
             message = conn.recv(2048) 
             if message:
+                print(message)
                 command = message.split(' ', 3)
+                print(command)
                 if command[0] == "login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("Incorrect Usage!\nSyntax: login <username> <password>")
