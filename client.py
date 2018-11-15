@@ -13,7 +13,7 @@ Port = 12905
 while True:
     print("Please enter a command. Type 'help' to see available commands.")
     command = sys.stdin.readline()
-    command = command.strip('\n')
+#    command = command.strip('\n')
     command = command.split(' ', 3)
 
     if command[0] == "login":

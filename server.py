@@ -63,21 +63,21 @@ def clientthread(conn, addr):
             if message:
                 message = message.strip("\n")
                 print(message)
-                command = message.split(' ', 3)
+                command = message.split(' ', 5)
                 print(command)
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("|login-syntaxerror")
-                        conn.close()
+#                        conn.close()
                     else:
                         if str(command[1]) in credentials:
                             if credentials[str(command[1])] == str(command[2]):
                                 if str(command[1]) in chatroomList:
                                     conn.send("|login-useralreadyloggedin")
-                                    conn.close()
+#                                    conn.close()
                                 if len(chatroomList) >= MAXCLIENTS:
                                     conn.send("|login-chatroomfull")
-                                    conn.close()
+#                                    conn.close()
                                 else:
                                     username = command[1]
                                     chatroomList.append((conn, username))
@@ -86,8 +86,10 @@ def clientthread(conn, addr):
                                     conn.send("Welcome to the Chat Room!")
                             else:
                                 conn.send("|login-incorrectpassword")
+#                                conn.close()
                         else:
                             conn.send("|login-userdne")
+#                            conn.close()
                             
                     print(chatroomList)
                 elif command[0] == "|who":
