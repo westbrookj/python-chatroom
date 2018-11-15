@@ -17,46 +17,48 @@ while True:
     command = command.split(' ', 3)
 
     if command[0] == "login":
-        if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
-            print("Invalid command.\nSyntax: login <username> <password>")
-        else:
-            server.connect((IP_address, Port))
-            server.send("|login " + str(command[1]) + str(command[2]))
-            
-            while True:
-                sockets_list = [sys.stdin, server]
-                read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
-                
-                for socks in read_sockets: 
-                    if socks == server: 
-                        message = socks.recv(2048) 
+        try:
+            if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
+                print("Invalid command.\nSyntax: login <username> <password>")
+                break
+            else:
+                server.connect((IP_address, Port))
+                server.send("|login " + str(command[1]) + str(command[2]))
+
+        while True:
+            sockets_list = [sys.stdin, server]
+            read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
+
+            for socks in read_sockets: 
+                if socks == server: 
+                    message = socks.recv(2048) 
 #                        print message
-                        if message == "|login-syntaxerror":
-                            print("Invalid command.\nSyntax: login <username> <password>")
-                            server.close()
-                            break
-                        elif message == "|login-useralreadyloggedin":
-                            print("User is already logged into the chatroom!")
-                            server.close()
-                            break
-                        elif message == "|login-chatroomfull":
-                            print("The chatroom is full!")
-                            server.close()
-                            break
-                        elif message == "|login-incorrectpassword":
-                            print("Incorrect password.")
-                            server.close()
-                            break
-                        elif message == "|login-userdne":
-                            print("The specified user does not exist!")
-                            server.close()
-                            break
-                    else:
-                        message = sys.stdin.readline() 
-                        server.send(message) 
-                        sys.stdout.write("<You>") 
-                        sys.stdout.write(message) 
-                        sys.stdout.flush() 
+                    if message == "|login-syntaxerror":
+                        print("Invalid command.\nSyntax: login <username> <password>")
+                        server.close()
+                        break
+                    elif message == "|login-useralreadyloggedin":
+                        print("User is already logged into the chatroom!")
+                        server.close()
+                        break
+                    elif message == "|login-chatroomfull":
+                        print("The chatroom is full!")
+                        server.close()
+                        break
+                    elif message == "|login-incorrectpassword":
+                        print("Incorrect password.")
+                        server.close()
+                        break
+                    elif message == "|login-userdne":
+                        print("The specified user does not exist!")
+                        server.close()
+                        break
+                else:
+                    message = sys.stdin.readline() 
+                    server.send(message) 
+                    sys.stdout.write("<You>") 
+                    sys.stdout.write(message) 
+                    sys.stdout.flush() 
 
 #while True: 
 #
