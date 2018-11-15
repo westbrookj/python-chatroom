@@ -28,7 +28,7 @@ while True:
 
         while True:
             check = True
-            if check == False:
+            if not check:
                 break
             else:
                 sockets_list = [sys.stdin, server]
