@@ -82,6 +82,7 @@ def clientthread(conn, addr):
                                 else:
                                     username = command[1]
                                     chatroomList.append((conn, username))
+                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom")
                                     conn.send("Welcome to the Chat Room!")
