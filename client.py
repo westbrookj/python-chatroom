@@ -7,7 +7,7 @@ IP_address = "192.168.1.10"
 Port = 12905
 
 while True:
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+    server = socket.socket()  
     
     print("Please enter a command. Type 'help' to see available commands.")
     command = sys.stdin.readline()
@@ -32,27 +32,26 @@ while True:
 
             for socks in read_sockets: 
                 if socks == server: 
-                    message = socks.recv(2048) 
-#                        print message
+                    message = socks.recv(2048)
                     if message == "|login-syntaxerror":
                         print("Invalid command.\nSyntax: login <username> <password>")
-                        server.close()
+#                        server.close()
                         break
                     elif message == "|login-useralreadyloggedin":
                         print("User is already logged into the chatroom!")
-                        server.close()
+#                        server.close()
                         break
                     elif message == "|login-chatroomfull":
                         print("The chatroom is full!")
-                        server.close()
+#                        server.close()
                         break
                     elif message == "|login-incorrectpassword":
                         print("Incorrect password.")
-                        server.close()
+#                        server.close()
                         break
                     elif message == "|login-userdne":
                         print("The specified user does not exist!")
-                        server.close()
+#                        server.close()
                         break
                     else:
                         print(message)
