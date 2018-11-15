@@ -59,6 +59,7 @@ def clientthread(conn, addr):
         try: 
             message = conn.recv(2048) 
             if message:
+                message = message.strip("\n")
                 print(message)
                 command = message.split(' ', 3)
                 print(command)
