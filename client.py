@@ -17,7 +17,7 @@ while True:
     command = command.split(' ', 3)
 
     if command[0] == "login":
-        if (command[1] == "" or command[1] == None) and (command[2] == "" or command[2] == None):
+        if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
             print("Invalid command.\nSyntax: login <username> <password>")
         else:
             server.connect((IP_address, Port))
