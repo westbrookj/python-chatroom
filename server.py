@@ -109,6 +109,7 @@ def clientthread(conn, addr):
                 elif command[0] == "|logout":
 #                    conn.close()
                     remove(conn)
+                    print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
                 else:
                     if conn in chatroomList:
