@@ -117,15 +117,15 @@ def clientthread(conn, addr):
                             """prints the message and address of the 
                             user who just sent the message on the server 
                             terminal"""
-                            print("<" + username + "> " + message)
+                            print("<" + username + "> " + command[2])
 
                             # Calls broadcast function to send message to all 
-                            broadcast("<" + username + "> " + message, conn)
+                            broadcast("<" + username + "> " + command[2], conn)
                         else:
                             sent = 0
                             for (connection,user) in chatroomList:
                                 if user == command[1]:
-                                    connection.send("<" + username + "> " + message)
+                                    connection.send("<" + username + " to You> " + command[2])
                                     sent = 1
                                     break
                             if sent == 0:
@@ -133,7 +133,7 @@ def clientthread(conn, addr):
                 elif command[0] == "newuser":
                     try:
                         if not credentials[str(command[1])]:
-                            credentials[str(command[1])] = str(command[2])
+                            addUser(str(command[1]), str(command[2]))
                             conn.send("User created successfully!")
                         else:
                             conn.send("|newuser-user-exists")
@@ -149,6 +149,13 @@ def clientthread(conn, addr):
         except: 
             continue
 
+def addUser(username, password):
+    credentials[username] = password
+    fields=[username, password]
+    with open('credentials.csv', 'a') as file:
+    writer = csv.writer(file)
+    writer.writerow(fields)
+            
 """Using the below function, we broadcast the message to all 
 clients who's object is not the same as the one sending 
 the message """
