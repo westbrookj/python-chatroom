@@ -24,6 +24,8 @@ IP_address = "192.168.1.10"
 # takes second argument from command prompt as port number 
 Port = 12905 
 
+print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
+
 credentials = {}
 with open('credentials.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
@@ -34,7 +36,7 @@ with open('credentials.csv') as csv_file:
     
     print(row[0] + " : " + row[1])
     
-print(credentials)
+#print(credentials)
 
 """ 
 binds the server to an entered IP address and at the 
@@ -189,7 +191,15 @@ while True:
 	conn which is a socket object for that user, and addr 
 	which contains the IP address of the client that just 
 	connected"""
-	conn, addr = server.accept() 
+    try:
+	   conn, addr = server.accept() 
+    except KeyboardInterrupt:
+        print("Shutting Down...")
+        
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
 
 	"""Maintains a list of clients for ease of broadcasting 
 	a message to all available people in the chatroom"""

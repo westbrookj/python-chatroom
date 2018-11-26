@@ -7,10 +7,12 @@ import time
 IP_address = "192.168.1.10"
 Port = 12905
 
+print("Chatroom Client (CS4850 - Lab 3)\n")
+
 while True:
     server = socket.socket()  
     
-    print("My Chatroom (CS4850 - Lab 3)\nPlease enter a command.")
+    print("Please enter a command.")
     command = sys.stdin.readline()
     command = command.strip('\n')
     command = command.split(' ', 2)
@@ -109,11 +111,16 @@ while True:
                             except:
                                 continue
     elif command[0] == "exit":
+        print("Closing Client...")
+        
         try:
             server.close()
         except:
             pass
         
-        break
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
         
         
