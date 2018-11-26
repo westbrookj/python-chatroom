@@ -99,11 +99,11 @@ def clientthread(conn, addr):
                     print(chatroomList)
                 elif command[0] == "who" or command[0] == "|who":
                     whoList = ""
-                    for (conn, username) in chatroomList:
+                    for pair in chatroomList:
                         if whoList == "":
-                            whoList += username
+                            whoList += pair["username"]
                         else:
-                            whoList += ", " + username
+                            whoList += ", " + pair["username"]
                         
                     if whoList == "":
                         conn.send("The chatroom is empty!")
@@ -125,11 +125,11 @@ def clientthread(conn, addr):
                     broadcast("<" + username + "> " + message, conn)
                 
                 whoList = ""
-                for (conn, username) in chatroomList:
+                for pair in chatroomList:
                     if whoList == "":
-                        whoList += username
+                        whoList += pair["username"]
                     else:
-                        whoList += ", " + username
+                        whoList += ", " + pair["username"]
                 print("Chatroom: " + whoList)
             else: 
                 """message may have no content if the connection 
@@ -143,15 +143,15 @@ def clientthread(conn, addr):
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-    for (client,username) in chatroomList: 
-        if client != connection: 
+    for pair in chatroomList: 
+        if pair["connection"] != connection: 
 			try: 
-				client.send(message) 
+				pair["connection"].send(message) 
 			except: 
-				client.close() 
+				pair["connection"].close() 
 
 				# if the link is broken, we remove the client 
-				remove(client) 
+				remove(pair["connection"]) 
 
 """The following function simply removes the object 
 from the list that was created at the beginning of 
