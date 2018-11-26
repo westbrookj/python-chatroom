@@ -2,6 +2,7 @@
 import socket 
 import select 
 import sys 
+import time
 
 IP_address = "192.168.1.10"
 Port = 12905
@@ -68,9 +69,10 @@ while True:
                         message = sys.stdin.readline().strip("\n")
                         if message == "logout":
                             server.send("|logout")
+                            print("You have been logged out.")
+                            time.sleep(1)
                             server.close()
                             check = False
-                            print("You have been logged out.")
                             break
                         else:
                             server.send(message) 
