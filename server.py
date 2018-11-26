@@ -84,7 +84,7 @@ def clientthread(conn, addr):
                                     chatroomList.append((conn, username))
 #                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
-                                    broadcast(username + " has entered the chatroom")
+                                    broadcast(username + " has entered the chatroom", conn)
                                     time.sleep(1)
                                     conn.send("Welcome to the Chat Room!")
                             else:
@@ -109,9 +109,9 @@ def clientthread(conn, addr):
                         conn.send(whoList)
                 elif command[0] == "logout":
 #                    conn.close()
-                    remove(conn, username)
                     print(username + " has left the chatroom")
-                    broadcast(username + " has left the chatroom")
+                    broadcast(username + " has left the chatroom", conn)
+                    remove(conn, username)
                 elif command[0] == "send":
                     if (conn,username) in chatroomList:
                         if command[1] == "all":
