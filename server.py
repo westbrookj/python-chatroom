@@ -113,14 +113,13 @@ def clientthread(conn, addr):
                     broadcast(username + " has left the chatroom")
                 else:
 #                    if conn in chatroomList:
-                        """prints the message and address of the 
-                        user who just sent the message on the server 
-                        terminal"""
+                    """prints the message and address of the 
+                    user who just sent the message on the server 
+                    terminal"""
                     print("<" + username + "> " + message)
 
                     # Calls broadcast function to send message to all 
                     broadcast("<" + username + "> " + message, conn)
-
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
