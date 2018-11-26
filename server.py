@@ -63,10 +63,10 @@ def clientthread(conn, addr):
             if message:
                 message = message.strip("\n")
 #                print(message)
-                command = message.split(' ', 5)
+                command = message.split(' ', 2)
                 print(command)            
             
-                if command[0] == "|login":
+                if command[0] == "login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("|login-syntaxerror")
 #                        conn.close()
@@ -94,7 +94,7 @@ def clientthread(conn, addr):
 #                            conn.close()
                             
                     print(chatroomList)
-                elif command[0] == "who" or command[0] == "|who":
+                elif command[0] == "who":
                     whoList = ""
                     for (conn, username) in chatroomList:
                         if whoList == "":
@@ -106,28 +106,41 @@ def clientthread(conn, addr):
                         conn.send("The chatroom is empty!")
                     else:
                         conn.send(whoList)
-                elif command[0] == "|logout":
+                elif command[0] == "logout":
 #                    conn.close()
                     remove(conn, username)
                     print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
-                else:
-#                    if conn in chatroomList:
-                    """prints the message and address of the 
-                    user who just sent the message on the server 
-                    terminal"""
-                    print("<" + username + "> " + message)
+                elif command[0] == "send":
+                    if (conn,username) in chatroomList:
+                        if command[1] == "all":
+                            """prints the message and address of the 
+                            user who just sent the message on the server 
+                            terminal"""
+                            print("<" + username + "> " + message)
 
-                    # Calls broadcast function to send message to all 
-                    broadcast("<" + username + "> " + message, conn)
-                
-                whoList = ""
-                for (conn, username) in chatroomList:
-                    if whoList == "":
-                        whoList += username
-                    else:
-                        whoList += ", " + username
-                print("Chatroom: " + whoList)
+                            # Calls broadcast function to send message to all 
+                            broadcast("<" + username + "> " + message, conn)
+                        else:
+                            sent = 0
+                            for (connection,user) in chatroomList:
+                                if user == command[1]:
+                                    connection.send("<" + username + "> " + message)
+                                    sent = 1
+                                    break
+                            if sent == 0:
+                                conn.send("User is not in the chatroom!")
+                elif command[0] == "newuser":
+                    try:
+                        if not credentials[str(command[1])]:
+                            credentials[str(command[1])] = str(command[2])
+                            conn.send("User created successfully!")
+                        else:
+                            conn.send("|newuser-user-exists")
+                    except:
+                        conn.send("|newuser-user-exists")
+                else:
+                    conn.send("|invalid-command")
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
