@@ -152,9 +152,10 @@ def clientthread(conn, addr):
 def addUser(username, password):
     credentials[username] = password
     fields=[username, password]
+    
     with open('credentials.csv', 'a') as file:
-    writer = csv.writer(file)
-    writer.writerow(fields)
+        writer = csv.writer(file)
+        writer.writerow(fields)
             
 """Using the below function, we broadcast the message to all 
 clients who's object is not the same as the one sending 
