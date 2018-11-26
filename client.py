@@ -84,11 +84,15 @@ while True:
                         server.close()
                         check = False
                         break
-                    elif message == "|newuser-success":
+                    elif message == "|newuser-success-notloggedin":
                         print("Successfully created user!")
                         server.close()
                         check = False
                         break
+					elif message == "|newuser-success-loggedin":
+                        print("Successfully created user!")
+					elif message == "|login-currentlyloggedin":
+						print("You are already logged in!")
                     else:
                         print(message)
                 else:

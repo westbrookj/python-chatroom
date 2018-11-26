@@ -150,7 +150,15 @@ def clientthread(conn, addr):
 						if not command[1] in credentials:
 							addUser(str(command[1]), str(command[2]))
 							print("User " + str(command[1]) + " created")
-							conn.send("|newuser-success")
+							loggedIn = 0
+							for (connection,user) in chatroomList:
+								if connection == conn:
+									loggedIn = 1
+									conn.send("|newuser-success-loggedin")
+									break
+									
+							if loggedIn == 0:
+								conn.send("|newuser-success-notloggedin")
 						else:
 							conn.send("|newuser-user-exists")
 					except:
