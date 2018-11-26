@@ -155,10 +155,10 @@ from the list that was created at the beginning of
 the program"""
 def remove(connection, username):
     if (connection,username) in chatroomList: 
-		chatroomList.remove((connection,username))
-        
-	if (connection,username) in clientList: 
-		clientList.remove((connection,username))
+        chatroomList.remove((connection,username))
+
+    if (connection,username) in clientList:
+        clientList.remove((connection,username))
 
 while True: 
 
