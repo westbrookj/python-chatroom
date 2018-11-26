@@ -10,7 +10,7 @@ Port = 12905
 while True:
     server = socket.socket()  
     
-    print("Please enter a command. Type 'help' to see available commands.")
+    print("My Chatroom (CS4850 - Lab 3)\nPlease enter a command.")
     command = sys.stdin.readline()
     command = command.strip('\n')
     command = command.split(' ', 2)
@@ -108,4 +108,12 @@ while True:
                                     print("<You to " + command[1] + "> " + command[2])
                             except:
                                 continue
-                                
+    elif command[0] == "exit":
+        try:
+            server.close()
+        except:
+            pass
+        
+        break
+        
+        
