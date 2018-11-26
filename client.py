@@ -78,7 +78,7 @@ while True:
                         check = False
                         break
                     elif message == "|invalid-command":
-                        print("Invalid command. Type 'help' for a list of commands.")
+                        print("Invalid command.")
                     elif message == "|newuser-user-exists":
                         print("User already exists. Please try a different username.")
                         server.close()
@@ -90,7 +90,7 @@ while True:
                         check = False
                         break
 					elif message == "|newuser-success-loggedin":
-                        print("Successfully created user!")
+						print("Successfully created user!")
 					elif message == "|login-currentlyloggedin":
 						print("You are already logged in!")
                     else:
