@@ -94,7 +94,7 @@ def clientthread(conn, addr):
 #                            conn.close()
                             
                     print(chatroomList)
-                elif command[0] == "|who" or command[0] == "who":
+                elif command[0] == "|who":
                     whoList = ""
                     for (conn, username) in chatroomList:
                         if whoList == "":
@@ -106,15 +106,19 @@ def clientthread(conn, addr):
                         conn.send("The chatroom is empty!")
                     else:
                         conn.send(whoList)
+                elif command[0] == "|logout":
+#                    conn.close()
+                    remove(conn)
+                    broadcast(username + " has left the chatroom")
                 else:
-#                    if conn in chatroomList:
-                    """prints the message and address of the 
-                    user who just sent the message on the server 
-                    terminal"""
-                    print("<" + username + "> " + message)
+                    if conn in chatroomList:
+                        """prints the message and address of the 
+                        user who just sent the message on the server 
+                        terminal"""
+                        print("<" + username + "> " + message)
 
-                    # Calls broadcast function to send message to all 
-                    broadcast("<" + username + "> " + message, conn) 
+                        # Calls broadcast function to send message to all 
+                        broadcast("<" + username + "> " + message, conn) 
 
             else: 
                 """message may have no content if the connection 

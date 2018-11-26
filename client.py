@@ -67,6 +67,7 @@ while True:
                     else:
                         message = sys.stdin.readline().strip("\n")
                         if message == "logout":
+                            server.send("|logout")
                             server.close()
                             check = False
                             print("You have been logged out.")
