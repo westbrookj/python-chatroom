@@ -65,7 +65,7 @@ while True:
                         else:
                             print(message)
                     else:
-                        message = sys.stdin.readline() 
+                        message = sys.stdin.readline().strip("\n")
                         if message == "logout":
                             server.close()
                             check = False
