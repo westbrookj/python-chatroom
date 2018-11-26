@@ -24,7 +24,7 @@ while True:
                     print("Invalid command.\nSyntax: login <username> <password>")
                     continue
                 else:
-                    server.send(message)
+                    server.send(' '.join(command))
             except:
                 print("Invalid command.\nSyntax: login <username> <password>")
                 continue
@@ -34,7 +34,7 @@ while True:
                     print("Invalid command.\nSyntax: newuser <username> <password>")
                     continue
                 else:
-                    server.send(message)
+                    server.send(' '.join(command))
             except:
                 print("Invalid command.\nSyntax: newuser <username> <password>")
                 continue
