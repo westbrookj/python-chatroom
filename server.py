@@ -81,7 +81,10 @@ def clientthread(conn, addr):
 #                                    conn.close()
                                 else:
                                     username = command[1]
-                                    chatroomList.append((conn, username))
+                                    chatroomList.append({
+                                                            "connection":conn,
+                                                            "username":username
+                                                        })
 #                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom")
@@ -94,7 +97,7 @@ def clientthread(conn, addr):
 #                            conn.close()
                             
                     print(chatroomList)
-                elif command[0] == "|who":
+                elif command[0] == "who" or command[0] == "|who":
                     whoList = ""
                     for (conn, username) in chatroomList:
                         if whoList == "":
@@ -108,7 +111,7 @@ def clientthread(conn, addr):
                         conn.send(whoList)
                 elif command[0] == "|logout":
 #                    conn.close()
-                    remove(conn, username)
+                    remove(conn)
                     print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
                 else:
@@ -131,7 +134,7 @@ def clientthread(conn, addr):
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
-                remove(conn, username)
+                remove(conn)
 
         except: 
             continue
@@ -148,14 +151,16 @@ def broadcast(message, connection):
 				client.close() 
 
 				# if the link is broken, we remove the client 
-				remove(client, username) 
+				remove(client) 
 
 """The following function simply removes the object 
 from the list that was created at the beginning of 
 the program"""
-def remove(connection, username): 
-	if (connection,username) in clientList: 
-		clientList.remove((connection,username)) 
+def remove(connection): 
+    for pair in clientList:
+        if pair["connection"] == connection
+            clientList.remove(pair)
+            break
 
 while True: 
 
