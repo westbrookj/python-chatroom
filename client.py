@@ -19,7 +19,7 @@ while True:
         try:
             if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
                 server.connect((IP_address, Port))
-                server.send("|login " + str(command[1]) + " " + str(command[2]))
+                server.send("login " + str(command[1]) + " " + str(command[2]))
             else:
                 print("Invalid command.\nSyntax: login <username> <password>")
                 continue
