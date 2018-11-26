@@ -76,13 +76,21 @@ def clientthread(conn, addr):
 					else:
 						if str(command[1]) in credentials:
 							if credentials[str(command[1])] == str(command[2]):
-								if str(command[1]) in chatroomList:
-									conn.send("|login-useralreadyloggedin")
+								error = 0
+								for (connection, user) in chatroomList:
+									if str(command[1]) == user:
+										conn.send("|login-useralreadyloggedin")
+										error = 1
+										break
+									elif connection == conn:
+										conn.send("|login-currentlyloggedin")
+										error = 1
+										break
 #									conn.close()
 								if len(chatroomList) >= MAXCLIENTS:
 									conn.send("|login-chatroomfull")
 #									conn.close()
-								else:
+								elif error != 1:
 									username = command[1]
 									chatroomList.append((conn, username))
 #									print(chatroomList)
@@ -97,7 +105,7 @@ def clientthread(conn, addr):
 							conn.send("|login-userdne")
 #							conn.close()
 							
-					print(chatroomList)
+#					print(chatroomList)
 				elif command[0] == "who":
 					whoList = ""
 					for (connection, user) in chatroomList:
@@ -141,7 +149,7 @@ def clientthread(conn, addr):
 					try:
 						if not command[1] in credentials:
 							addUser(str(command[1]), str(command[2]))
-							print("User " + str(command[1]) + "created")
+							print("User " + str(command[1]) + " created")
 							conn.send("|newuser-success")
 						else:
 							conn.send("|newuser-user-exists")
