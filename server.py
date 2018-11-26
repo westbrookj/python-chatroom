@@ -108,7 +108,7 @@ def clientthread(conn, addr):
                         conn.send(whoList)
                 elif command[0] == "|logout":
 #                    conn.close()
-                    remove(conn)
+                    remove(conn, username)
                     print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
                 else:
@@ -120,18 +120,18 @@ def clientthread(conn, addr):
 
                     # Calls broadcast function to send message to all 
                     broadcast("<" + username + "> " + message, conn)
+                
+                whoList = ""
+                for (conn, username) in chatroomList:
+                    if whoList == "":
+                        whoList += username
+                    else:
+                        whoList += ", " + username
+                print("Chatroom: " + whoList)
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
-                remove(conn)
-                
-            whoList = ""
-            for (conn, username) in chatroomList:
-                if whoList == "":
-                    whoList += username
-                else:
-                    whoList += ", " + username
-            print("Chatroom: " + whoList)
+                remove(conn, username)
 
         except: 
             continue
@@ -148,14 +148,14 @@ def broadcast(message, connection):
 				client.close() 
 
 				# if the link is broken, we remove the client 
-				remove(client) 
+				remove(client, username) 
 
 """The following function simply removes the object 
 from the list that was created at the beginning of 
 the program"""
-def remove(connection): 
-	if connection in clientList: 
-		clientList.remove(connection) 
+def remove(connection, username): 
+	if (connection,username) in clientList: 
+		clientList.remove((connection,username)) 
 
 while True: 
 
