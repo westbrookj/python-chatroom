@@ -64,7 +64,7 @@ def clientthread(conn, addr):
                 message = message.strip("\n")
 #                print(message)
                 command = message.split(' ', 5)
-#                print(command)
+                print(command)
                 
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
