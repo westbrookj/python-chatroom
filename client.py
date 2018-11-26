@@ -16,11 +16,11 @@ while True:
     command = command.split(' ', 2)
 
     if command[0] == "login" or command[0] == "newuser":
+        server.connect((IP_address, Port))
         if command[0] == "login":
             try:
                 if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
-                    server.connect((IP_address, Port))
-                    server.send("login " + str(command[1]) + " " + str(command[2]))
+                    server.send(message)
                 else:
                     print("Invalid command.\nSyntax: login <username> <password>")
                     continue
