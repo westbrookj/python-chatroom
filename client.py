@@ -12,7 +12,7 @@ while True:
     
     print("Please enter a command. Type 'help' to see available commands.")
     command = sys.stdin.readline()
-#    command = command.strip('\n')
+    command = command.strip('\n')
     command = command.split(' ', 2)
     print(command)
 
@@ -20,21 +20,21 @@ while True:
         server.connect((IP_address, Port))
         if command[0] == "login":
             try:
-                if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
-                    server.send(message)
-                else:
+                if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
                     print("Invalid command.\nSyntax: login <username> <password>")
                     continue
+                else:
+                    server.send(message)
             except:
                 print("Invalid command.\nSyntax: login <username> <password>")
                 continue
         elif command[0] == "newuser":
             try:
-                if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
-                    server.send(message)
-                else:
+                if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
                     print("Invalid command.\nSyntax: newuser <username> <password>")
                     continue
+                else:
+                    server.send(message)
             except:
                 print("Invalid command.\nSyntax: newuser <username> <password>")
                 continue
