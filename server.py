@@ -96,11 +96,11 @@ def clientthread(conn, addr):
                     print(chatroomList)
                 elif command[0] == "who":
                     whoList = ""
-                    for (conn, username) in chatroomList:
+                    for (connection, user) in chatroomList:
                         if whoList == "":
-                            whoList += username
+                            whoList += user
                         else:
-                            whoList += ", " + username
+                            whoList += ", " + user
                         
                     if whoList == "":
                         conn.send("The chatroom is empty!")
