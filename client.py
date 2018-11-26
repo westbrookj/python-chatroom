@@ -76,9 +76,7 @@ while True:
                             break
                         else:
                             server.send(message) 
-                            sys.stdout.write("<You> ") 
-                            sys.stdout.write(message) 
-                            sys.stdout.flush() 
+                            print("<You> " + message) 
 
 #while True: 
 #

@@ -57,7 +57,7 @@ def clientthread(conn, addr):
     
     username = None
     
-    while True: 
+    while True:
         try: 
             message = conn.recv(2048) 
             if message:
@@ -66,6 +66,15 @@ def clientthread(conn, addr):
                 command = message.split(' ', 5)
                 print(command)
                 
+                whoList = ""
+                for (conn, username) in chatroomList:
+                    if whoList == "":
+                        whoList += username
+                    else:
+                        whoList += ", " + username
+                print("Chatroom: " + whoList)
+            
+            
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
                         conn.send("|login-syntaxerror")
