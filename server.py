@@ -64,7 +64,7 @@ def clientthread(conn, addr):
                 message = message.strip("\n")
 #                print(message)
                 command = message.split(' ', 2)
-                print(command)            
+#                print(command)            
             
                 if command[0] == "login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
@@ -85,8 +85,8 @@ def clientthread(conn, addr):
 #                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom", conn)
-                                    time.sleep(1)
-                                    conn.send("Welcome to the Chat Room!")
+#                                    time.sleep(1)
+                                    conn.send("|login-success")
                             else:
                                 conn.send("|login-incorrectpassword")
 #                                conn.close()
@@ -197,7 +197,6 @@ while True:
 	clientList.append(conn) 
 
 	# prints the address of the user that just connected 
-#	print addr[0] + " connected"
 
 	# creates and individual thread for every user 
 	# that connects 

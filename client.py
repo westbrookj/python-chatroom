@@ -35,7 +35,9 @@ while True:
             for socks in read_sockets: 
                 if socks == server: 
                     message = socks.recv(2048)
-                    if message == "|login-syntaxerror":
+                    if message == "|login-success":
+                        print("Welcome to the Chatroom!")
+                    elif message == "|login-syntaxerror":
                         print("Invalid command.\nSyntax: login <username> <password>")
                         server.close()
                         check = False
