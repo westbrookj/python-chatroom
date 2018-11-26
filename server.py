@@ -81,10 +81,7 @@ def clientthread(conn, addr):
 #                                    conn.close()
                                 else:
                                     username = command[1]
-                                    chatroomList.append({
-                                                            "connection":conn,
-                                                            "username":username
-                                                        })
+                                    chatroomList.append((conn, username))
 #                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom")
@@ -99,11 +96,11 @@ def clientthread(conn, addr):
                     print(chatroomList)
                 elif command[0] == "who" or command[0] == "|who":
                     whoList = ""
-                    for pair in chatroomList:
+                    for (conn, username) in chatroomList:
                         if whoList == "":
-                            whoList += pair["username"]
+                            whoList += username
                         else:
-                            whoList += ", " + pair["username"]
+                            whoList += ", " + username
                         
                     if whoList == "":
                         conn.send("The chatroom is empty!")
@@ -111,7 +108,7 @@ def clientthread(conn, addr):
                         conn.send(whoList)
                 elif command[0] == "|logout":
 #                    conn.close()
-                    remove(conn)
+                    remove(conn, username)
                     print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
                 else:
@@ -125,16 +122,16 @@ def clientthread(conn, addr):
                     broadcast("<" + username + "> " + message, conn)
                 
                 whoList = ""
-                for pair in chatroomList:
+                for (conn, username) in chatroomList:
                     if whoList == "":
-                        whoList += pair["username"]
+                        whoList += username
                     else:
-                        whoList += ", " + pair["username"]
+                        whoList += ", " + username
                 print("Chatroom: " + whoList)
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
-                remove(conn)
+                remove(conn, username)
 
         except: 
             continue
@@ -143,24 +140,25 @@ def clientthread(conn, addr):
 clients who's object is not the same as the one sending 
 the message """
 def broadcast(message, connection): 
-    for pair in chatroomList: 
-        if pair["connection"] != connection: 
+    for (client,username) in chatroomList: 
+        if client != connection: 
 			try: 
-				pair["connection"].send(message) 
+				client.send(message) 
 			except: 
-				pair["connection"].close() 
+				client.close() 
 
 				# if the link is broken, we remove the client 
-				remove(pair["connection"]) 
+				remove(client, username) 
 
 """The following function simply removes the object 
 from the list that was created at the beginning of 
 the program"""
-def remove(connection): 
-    for pair in clientList:
-        if pair["connection"] == connection:
-            clientList.remove(pair)
-            break
+def remove(connection, username):
+    if (connection,username) in chatroomList: 
+		chatroomList.remove((connection,username))
+        
+	if (connection,username) in clientList: 
+		clientList.remove((connection,username))
 
 while True: 
 
