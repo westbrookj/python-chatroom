@@ -85,6 +85,7 @@ def clientthread(conn, addr):
 #                                    print(chatroomList)
                                     print(username + " has entered the chatroom")
                                     broadcast(username + " has entered the chatroom")
+                                    time.sleep(1)
                                     conn.send("Welcome to the Chat Room!")
                             else:
                                 conn.send("|login-incorrectpassword")
@@ -130,9 +131,11 @@ def clientthread(conn, addr):
                                     break
                             if sent == 0:
                                 conn.send("User is not in the chatroom!")
+                            else:
+                                print("<" + username + " to " + user + "> " + command[2])
                 elif command[0] == "newuser":
                     try:
-                        if not credentials[str(command[1])]:
+                        if not command[1] in credentials:
                             addUser(str(command[1]), str(command[2]))
                             conn.send("User created successfully!")
                         else:
