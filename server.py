@@ -137,7 +137,7 @@ def clientthread(conn, addr):
                     try:
                         if not command[1] in credentials:
                             addUser(str(command[1]), str(command[2]))
-                            conn.send("User created successfully!")
+                            conn.send("|newuser-success")
                         else:
                             conn.send("|newuser-user-exists")
                     except:

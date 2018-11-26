@@ -81,6 +81,11 @@ while True:
                         server.close()
                         check = False
                         break
+                    elif message == "|newuser-success":
+                        print("Successfully created user!")
+                        server.close()
+                        check = False
+                        break
                     else:
                         print(message)
                 else:
