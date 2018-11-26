@@ -17,7 +17,7 @@ while True:
     command = sys.stdin.readline()
     command = command.strip('\n')
     command = command.split(' ', 2)
-    print(command)
+#    print(command)
 
     if command[0] == "login" or command[0] == "newuser":
         server.connect((IP_address, Port))

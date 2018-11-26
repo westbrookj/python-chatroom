@@ -141,6 +141,7 @@ def clientthread(conn, addr):
 					try:
 						if not command[1] in credentials:
 							addUser(str(command[1]), str(command[2]))
+							print("User " + str(command[1]) + "created")
 							conn.send("|newuser-success")
 						else:
 							conn.send("|newuser-user-exists")
@@ -196,7 +197,7 @@ while True:
 	try:
 		conn, addr = server.accept()
 	except KeyboardInterrupt:
-		print("Shutting Down...")
+		print("\nShutting Down...")
 
 		try:
 			sys.exit(0)
