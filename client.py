@@ -87,8 +87,13 @@ while True:
                             print("Invalid command.\nSyntax: newuser <username> <password>")
                             continue
                     else:
-                        server.send(message) 
-                        print("<You> " + command[2]) 
+                        server.send(message)
+                        if command[0] == "send":
+                            try:
+                                if command[1] == "all":
+                                    print("<You> " + command[2])
+                                else:
+                                    print("<You to " + command[1] + "> " + command[2])
 
 #while True: 
 #
