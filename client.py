@@ -94,3 +94,5 @@ while True:
                                     print("<You> " + command[2])
                                 else:
                                     print("<You to " + command[1] + "> " + command[2])
+                            except:
+                                continue
