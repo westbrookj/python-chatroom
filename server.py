@@ -64,16 +64,7 @@ def clientthread(conn, addr):
                 message = message.strip("\n")
 #                print(message)
                 command = message.split(' ', 5)
-                print(command)
-                
-                whoList = ""
-                for (conn, username) in chatroomList:
-                    if whoList == "":
-                        whoList += username
-                    else:
-                        whoList += ", " + username
-                print("Chatroom: " + whoList)
-            
+                print(command)            
             
                 if command[0] == "|login":
                     if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
@@ -121,19 +112,27 @@ def clientthread(conn, addr):
                     print(username + " has left the chatroom")
                     broadcast(username + " has left the chatroom")
                 else:
-                    if conn in chatroomList:
+#                    if conn in chatroomList:
                         """prints the message and address of the 
                         user who just sent the message on the server 
                         terminal"""
-                        print("<" + username + "> " + message)
+                    print("<" + username + "> " + message)
 
-                        # Calls broadcast function to send message to all 
-                        broadcast("<" + username + "> " + message, conn) 
+                    # Calls broadcast function to send message to all 
+                    broadcast("<" + username + "> " + message, conn)
 
             else: 
                 """message may have no content if the connection 
                 is broken, in this case we remove the connection"""
-                remove(conn) 
+                remove(conn)
+                
+            whoList = ""
+            for (conn, username) in chatroomList:
+                if whoList == "":
+                    whoList += username
+                else:
+                    whoList += ", " + username
+            print("Chatroom: " + whoList)
 
         except: 
             continue
