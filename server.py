@@ -158,7 +158,7 @@ from the list that was created at the beginning of
 the program"""
 def remove(connection): 
     for pair in clientList:
-        if pair["connection"] == connection
+        if pair["connection"] == connection:
             clientList.remove(pair)
             break
 
