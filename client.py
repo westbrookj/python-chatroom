@@ -69,10 +69,11 @@ while True:
                         if message == "logout":
                             server.close()
                             check = False
+                            print("You have been logged out.")
                             break
                         else:
                             server.send(message) 
-                            sys.stdout.write("<You>") 
+                            sys.stdout.write("<You> ") 
                             sys.stdout.write(message) 
                             sys.stdout.flush() 
 
