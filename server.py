@@ -3,6 +3,7 @@ import socket
 import select 
 import sys 
 import csv
+import os
 from thread import *
 
 """The first argument AF_INET is the address domain of the 
@@ -34,7 +35,7 @@ with open('credentials.csv') as csv_file:
 		credentials[str(row[0])] = str(row[1])
 		line_count += 1
 	
-	print(row[0] + " : " + row[1])
+#	print(row[0] + " : " + row[1])
 	
 #print(credentials)
 
@@ -64,9 +65,9 @@ def clientthread(conn, addr):
 			message = conn.recv(2048) 
 			if message:
 				message = message.strip("\n")
-				print(message)
+#				print(message)
 				command = message.split(' ', 2)
-				print(command)			
+#				print(command)			
 			
 				if command[0] == "login":
 					if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
@@ -129,6 +130,7 @@ def clientthread(conn, addr):
 							for (connection,user) in chatroomList:
 								if user == command[1]:
 									connection.send("<" + username + " to You> " + command[2])
+									conn.send("<You to " + user + "> " + command[2])
 									sent = 1
 									break
 							if sent == 0:

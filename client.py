@@ -3,6 +3,7 @@ import socket
 import select 
 import sys 
 import time
+import os
 
 IP_address = "192.168.1.10"
 Port = 12905
@@ -106,8 +107,8 @@ while True:
                             try:
                                 if command[1] == "all":
                                     print("<You> " + command[2])
-                                else:
-                                    print("<You to " + command[1] + "> " + command[2])
+#                                else:
+#                                    print("<You to " + command[1] + "> " + command[2])
                             except:
                                 continue
     elif command[0] == "exit":
