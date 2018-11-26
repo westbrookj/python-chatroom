@@ -186,13 +186,13 @@ def remove(connection, username):
         clientList.remove((connection,username))
 
 while True: 
-
 	"""Accepts a connection request and stores two parameters, 
 	conn which is a socket object for that user, and addr 
 	which contains the IP address of the client that just 
 	connected"""
+
     try:
-        conn, addr = server.accept() 
+        conn, addr = server.accept()
     except KeyboardInterrupt:
         print("Shutting Down...")
 
