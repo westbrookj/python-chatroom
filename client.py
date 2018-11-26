@@ -15,17 +15,28 @@ while True:
 #    command = command.strip('\n')
     command = command.split(' ', 2)
 
-    if command[0] == "login":
-        try:
-            if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
-                server.connect((IP_address, Port))
-                server.send("login " + str(command[1]) + " " + str(command[2]))
-            else:
+    if command[0] == "login" or command[0] == "newuser":
+        if command[0] == "login":
+            try:
+                if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
+                    server.connect((IP_address, Port))
+                    server.send("login " + str(command[1]) + " " + str(command[2]))
+                else:
+                    print("Invalid command.\nSyntax: login <username> <password>")
+                    continue
+            except:
                 print("Invalid command.\nSyntax: login <username> <password>")
                 continue
-        except:
-            print("Invalid command.\nSyntax: login <username> <password>")
-            continue
+        elif command[0] == "newuser":
+            try:
+                if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
+                    server.send(message)
+                else:
+                    print("Invalid command.\nSyntax: newuser <username> <password>")
+                    continue
+            except:
+                print("Invalid command.\nSyntax: newuser <username> <password>")
+                continue
 
         check = True
         while check:
@@ -66,6 +77,9 @@ while True:
                         print("Invalid command. Type 'help' for a list of commands.")
                     elif message == "|newuser-user-exists":
                         print("User already exists. Please try a different username.")
+                        server.close()
+                        check = False
+                        break
                     else:
                         print(message)
                 else:
@@ -78,16 +92,6 @@ while True:
                         server.close()
                         check = False
                         break
-                    elif command[0] == "newuser":
-                        try:
-                            if (command[1] != "" or command[1] != None) and (command[2] != "" or command[2] != None):
-                                server.send(message)
-                            else:
-                                print("Invalid command.\nSyntax: newuser <username> <password>")
-                                continue
-                        except:
-                            print("Invalid command.\nSyntax: newuser <username> <password>")
-                            continue
                     else:
                         server.send(message)
                         if command[0] == "send":
@@ -98,3 +102,4 @@ while True:
                                     print("<You to " + command[1] + "> " + command[2])
                             except:
                                 continue
+                                
