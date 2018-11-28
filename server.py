@@ -184,20 +184,7 @@ def ClientThread(conn, addr):
 				else:
 					conn.send("|invalid-command")
 					
-				whoList = ""
-					
-				# iterate through chatroomList and append all usernames to whoList
-				for (connection, user) in chatroomList:
-					if whoList == "":
-						whoList += user
-					else:
-						whoList += ", " + user
-
-				# if there is no one in the chatroom, send empty chat message to client, else send the list to the client
-				if whoList == "":
-					print("The chatroom is empty!")
-				else:
-					print(whoList)
+				print(chatroomList)
 					
 			# if the message is empty, remove and disconnect the connection
 			else: 
