@@ -62,7 +62,7 @@ while True:
 		while check:
 			# establish inputs as the server's messages and keyboard input and listen on them
 			socketList = [sys.stdin, server]
-			readSockets,writeSocket, errorSocket = select.select(socketList,[],[]) 
+			readSockets,writeSocket,errorSocket = select.select(socketList,[],[]) 
 
 			for socks in readSockets: 
 				# if the message is from the server

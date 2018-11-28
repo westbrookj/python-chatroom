@@ -77,7 +77,7 @@ def ClientThread(conn, addr):
 				# If the command is 'login': login <username> <password>
 				if command[0] == "login":
 					# verify username and password fields are not empty
-					if (command[1] == "" or command[1] == None) or (command[2] != "" or command[2] != None):
+					if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
 						# if username and/or password are empty, send an error message to the client
 						conn.send("|login-syntaxerror")
 					else:
