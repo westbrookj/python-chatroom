@@ -43,7 +43,7 @@ while True:
 				else:
 					server.send(' '.join(command))
 			except:
-				print("Invalid command.\nSyntax: login <username> <password>")
+				print("TestInvalid command.\nSyntax: login <username> <password>")
 				continue
 		# if the command is 'newuser': newuser <username> <password>
 		elif command[0] == "newuser":
