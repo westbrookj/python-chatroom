@@ -56,7 +56,7 @@ Define the ClientThread function.
 
 This function creates a thread for each connection that is made to the server and handles all messages transmitted between the client and server.
 """
-def ClientThread(conn):
+def ClientThread(conn, addr):
 	
 	username = None
 	
@@ -249,7 +249,7 @@ while True:
 	clientList.append(conn) 
 
 	# starts a new instance of ClientThread and passes the connection as the parameter
-	start_new_thread(ClientThread, (conn))	 
+	start_new_thread(ClientThread, (conn, addr))	 
 
 conn.close() 
 server.close() 
