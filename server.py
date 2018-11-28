@@ -183,6 +183,22 @@ def ClientThread(conn, addr):
 				# if command didn't match any commands, send error message to client
 				else:
 					conn.send("|invalid-command")
+					
+				whoList = ""
+					
+				# iterate through chatroomList and append all usernames to whoList
+				for (connection, user) in chatroomList:
+					if whoList == "":
+						whoList += user
+					else:
+						whoList += ", " + user
+
+				# if there is no one in the chatroom, send empty chat message to client, else send the list to the client
+				if whoList == "":
+					print("The chatroom is empty!")
+				else:
+					print(whoList)
+					
 			# if the message is empty, remove and disconnect the connection
 			else: 
 				remove(conn, username)
