@@ -201,9 +201,9 @@ def addUser(username, password):
 	with open('credentials.csv', 'a') as file:
 		file.write(username + "," + password + "\n")
 			
-""""
+"""
 Function to broadcast the message to all clients in the chatroom except the client sending it.
-""""
+"""
 def broadcast(message, connection): 
 	# iterate through the chatroomList and send message to them if they aren't the sender.
 	for (client,username) in chatroomList: 
