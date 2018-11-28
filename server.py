@@ -1,4 +1,9 @@
-# Python program to implement server side of chat room. 
+# Name: Joshua Westbrook
+# Date: 11/21/2018
+# Student ID: 14262905
+# CS4850 Lab 3 Chatroom
+# Server Application
+
 import socket 
 import select 
 import sys 
@@ -6,27 +11,24 @@ import csv
 import os
 from thread import *
 
-"""The first argument AF_INET is the address domain of the 
-socket. This is used when we have an Internet Domain with 
-any two hosts The second argument is the type of socket. 
-SOCK_STREAM means that data or characters are read in 
-a continuous flow."""
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+# sets the IP address for the server
+IPAddress = "192.168.1.10" 
 
-# checks whether sufficient arguments have been provided 
-#if len(sys.argv) != 3: 
-#	print "Correct usage: script, IP address, port number"
-#	exit() 
+# sets the port to use (1 + the last four of my ID 2905)
+port = 12905
 
-# takes the first argument from command prompt as IP address 
-IP_address = "192.168.1.10" 
 
-# takes second argument from command prompt as port number 
-Port = 12905 
 
-print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
+# Create clientList to track all connections to the server
+clientList = [] 
 
+# Create chatroomList to track all connections in the chatroom
+chatroomList = []
+
+# Create maxClients
+maxClients = 3
+
+# Read the credentials stored in the credentials.csv file
 credentials = {}
 with open('credentials.csv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
@@ -34,169 +36,190 @@ with open('credentials.csv') as csv_file:
 	for row in csv_reader:
 		credentials[str(row[0])] = str(row[1])
 		line_count += 1
-	
-#	print(row[0] + " : " + row[1])
-	
-#print(credentials)
+
+# Create the socket to receive connections from clients
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Set the socket options
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+
+# Bind the server socket to the IP Address and Port
+server.bind((IPAddress, port)) 
+
+# Begin listening for up to 5 connections (more than maxClients to allow clients to still create new users, etc.)
+server.listen(100)
+
+print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
 
 """ 
-binds the server to an entered IP address and at the 
-specified port number. 
-The client must be aware of these parameters 
+Define the ClientThread function.
+
+This function creates a thread for each connection that is made to the server and handles all messages transmitted between the client and server.
 """
-server.bind((IP_address, Port)) 
-
-""" 
-listens for 100 active connections. This number can be 
-increased as per convenience. 
-"""
-server.listen(100) 
-
-clientList = [] 
-chatroomList = []
-MAXCLIENTS = 3
-
-def clientthread(conn, addr):
+def ClientThread(conn):
 	
 	username = None
 	
 	while True:
 		try: 
+			# Receive the message from client
 			message = conn.recv(2048) 
-			if message:
-				message = message.strip("\n")
-#				print(message)
-				command = message.split(' ', 2)
-#				print(command)			
 			
+			# If the message is not empty
+			if message:
+				# Strip newline character from the message
+				message = message.strip("\n")
+				
+				# Parse the message into 3 parts: <command> <option> <option>
+				# The third part will contain the remainder of the message sent including any spaces, etc.
+				command = message.split(' ', 2)		
+			
+				# If the command is 'login': login <username> <password>
 				if command[0] == "login":
-					if (command[1] == "" or command[1] == None) and (command[2] != "" or command[2] != None):
+					# verify username and password fields are not empty
+					if (command[1] == "" or command[1] == None) or (command[2] != "" or command[2] != None):
+						# if username and/or password are empty, send an error message to the client
 						conn.send("|login-syntaxerror")
-#						conn.close()
 					else:
+						# if username is in the credentials file
 						if str(command[1]) in credentials:
+							# if password from credentials file matches password from message
 							if credentials[str(command[1])] == str(command[2]):
+								# set error variable to 0 (no error)
 								error = 0
+								
+								# iterate through users in the chatroom to verify the user isn't already logged in
 								for (connection, user) in chatroomList:
+									# if the user is already logged in, send error message to client & set error variable to 1
 									if str(command[1]) == user:
 										conn.send("|login-useralreadyloggedin")
 										error = 1
 										break
+									# if the client is already connected to the chatroom, send error message to client & set error variable to 1
 									elif connection == conn:
 										conn.send("|login-currentlyloggedin")
 										error = 1
 										break
-#									conn.close()
-								if len(chatroomList) >= MAXCLIENTS:
+								# if there are the max number of people in the chatroom, send error to client
+								if len(chatroomList) >= maxClients:
 									conn.send("|login-chatroomfull")
-#									conn.close()
+								# if valid login: set thread's username, add to chatroomList, send proper messages to other clients, and send success message to client
 								elif error != 1:
 									username = command[1]
 									chatroomList.append((conn, username))
-#									print(chatroomList)
 									print(username + " has entered the chatroom")
 									broadcast(username + " has entered the chatroom", conn)
-#									time.sleep(1)
 									conn.send("|login-success")
+							# if the password was invalid, send error message to client
 							else:
 								conn.send("|login-incorrectpassword")
-#								conn.close()
+						# if the user was not found in the credentials file, send error message to client
 						else:
 							conn.send("|login-userdne")
-#							conn.close()
-							
-#					print(chatroomList)
+				# if the command is 'who'
 				elif command[0] == "who":
 					whoList = ""
+					
+					# iterate through chatroomList and append all usernames to whoList
 					for (connection, user) in chatroomList:
 						if whoList == "":
 							whoList += user
 						else:
 							whoList += ", " + user
-						
+					
+					# if there is no one in the chatroom, send empty chat message to client, else send the list to the client
 					if whoList == "":
 						conn.send("The chatroom is empty!")
 					else:
 						conn.send(whoList)
+				# if the command is 'logout', notify other clients, set thread username to None, and remove from the chatroomList and clientList
 				elif command[0] == "logout":
-#					conn.close()
 					print(username + " has left the chatroom")
 					broadcast(username + " has left the chatroom", conn)
+					username = None
 					remove(conn, username)
+				# if the command is 'send'
 				elif command[0] == "send":
+					# verify the user is in the chatroom
 					if (conn,username) in chatroomList:
+						# if the command is 'send all', broadcast the message to other clients
 						if command[1] == "all":
-							"""prints the message and address of the 
-							user who just sent the message on the server 
-							terminal"""
-							print("<" + username + "> " + command[2])
-
-							# Calls broadcast function to send message to all 
+							print("<" + username + "> " + command[2]) 
 							broadcast("<" + username + "> " + command[2], conn)
+						# if the command is 'send <username>'
 						else:
+							# set sent variable to 0
 							sent = 0
+							
+							# iterate through users in chatroomList
 							for (connection,user) in chatroomList:
+								# if the user is in the chatroom, send the message to the specified user and send the confirmation back to the client
 								if user == command[1]:
 									connection.send("<" + username + " to You> " + command[2])
 									conn.send("<You to " + user + "> " + command[2])
 									sent = 1
 									break
+							
+							# if the message was never delivered, send the error message to the client, otherwise, print on server console
 							if sent == 0:
 								conn.send("User is not in the chatroom!")
 							else:
 								print("<" + username + " to " + user + "> " + command[2])
+				# if the command is 'newuser'
 				elif command[0] == "newuser":
+					# check if the user is already in the credentials file (username taken)
 					try:
+						# if user doesn't exist already, add user to credentials file and sent success messages
 						if not command[1] in credentials:
 							addUser(str(command[1]), str(command[2]))
 							print("User " + str(command[1]) + " created")
-							loggedIn = 0
-							for (connection,user) in chatroomList:
-								if connection == conn:
-									loggedIn = 1
-									conn.send("|newuser-success-loggedin")
-									break
-									
-							if loggedIn == 0:
-								conn.send("|newuser-success-notloggedin")
+							conn.send("|newuser-success")
+						# if the user already exists, send error message to client
 						else:
 							conn.send("|newuser-user-exists")
+					# if the check failed, send error message to client
 					except:
 						conn.send("|newuser-user-exists")
+				# if command didn't match any commands, send error message to client
 				else:
 					conn.send("|invalid-command")
+			# if the message is empty, remove and disconnect the connection
 			else: 
-				"""message may have no content if the connection 
-				is broken, in this case we remove the connection"""
 				remove(conn, username)
-
+		# if the receive operation failed, retry
 		except: 
 			continue
 
+""""
+Function to add a user to the credentials file
+""""
 def addUser(username, password):
+	# adds to credentials list
 	credentials[username] = password
-	fields=[username, password]
 	
+	# adds to credentials file
 	with open('credentials.csv', 'a') as file:
 		file.write(username + "," + password + "\n")
 			
-"""Using the below function, we broadcast the message to all 
-clients who's object is not the same as the one sending 
-the message """
+""""
+Function to broadcast the message to all clients in the chatroom except the client sending it.
+""""
 def broadcast(message, connection): 
+	# iterate through the chatroomList and send message to them if they aren't the sender.
 	for (client,username) in chatroomList: 
 		if client != connection: 
 			try:
 				client.send(message) 
 			except: 
+				# close the connection if sending the message fails
 				client.close() 
 
-				# if the link is broken, we remove the client 
+				# remove the client from the server if sending the message fails
 				remove(client, username) 
 
-"""The following function simply removes the object 
-from the list that was created at the beginning of 
-the program"""
+"""
+Function to remove the specified connection from the clientList and chatroomList
+"""
 def remove(connection, username):
 	if (connection,username) in chatroomList: 
 		chatroomList.remove((connection,username))
@@ -204,31 +227,29 @@ def remove(connection, username):
 	if (connection,username) in clientList:
 		clientList.remove((connection,username))
 
-while True: 
-	"""Accepts a connection request and stores two parameters, 
-	conn which is a socket object for that user, and addr 
-	which contains the IP address of the client that just 
-	connected"""
-
+"""
+Loop to listen for new connections and accept them.
+"""
+while True:
+	# try to accept an incoming connection
 	try:
 		conn, addr = server.accept()
+	# if there is a keyboard interrupt, shutdown the application
 	except KeyboardInterrupt:
 		print("\nShutting Down...")
 
+		server.close()
+		
 		try:
 			sys.exit(0)
 		except SystemExit:
 			os._exit(0)
 
-	"""Maintains a list of clients for ease of broadcasting 
-	a message to all available people in the chatroom"""
+	# if the connection is successfully accepted, add to the clientList
 	clientList.append(conn) 
 
-	# prints the address of the user that just connected 
-
-	# creates and individual thread for every user 
-	# that connects 
-	start_new_thread(clientthread,(conn,addr))	 
+	# starts a new instance of ClientThread and passes the connection as the parameter
+	start_new_thread(ClientThread, conn)	 
 
 conn.close() 
 server.close() 

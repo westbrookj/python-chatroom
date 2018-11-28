@@ -1,27 +1,40 @@
-# Python program to implement client side of chat room. 
+# Name: Joshua Westbrook
+# Date: 11/21/2018
+# Student ID: 14262905
+# CS4850 Lab 3 Chatroom
+# Client Application
+
 import socket 
 import select 
 import sys 
 import time
 import os
 
-IP_address = "192.168.1.10"
-Port = 12905
+# define the IP Address and Port of the server
+IPAddress = "192.168.1.10"
+port = 12905
 
 print("Chatroom Client (CS4850 - Lab 3)\n")
 
 while True:
+	# create the socket to connect to the server
 	server = socket.socket()  
 	
+	# receive input for a command, strip the newline character, and split into 3 parts
+	# the 3 parts are: <command> <option> <option>. the second option will be the remainder of the input
 	print("Please enter a command.")
 	command = sys.stdin.readline()
 	command = command.strip('\n')
 	command = command.split(' ', 2)
-#	print(command)
 
+	# if the command is 'login' or 'newuser'
 	if command[0] == "login" or command[0] == "newuser":
-		server.connect((IP_address, Port))
+		# establish a connection to the server
+		server.connect((IPAddress, port))
+		
+		# if the command is 'login': login <username> <password>
 		if command[0] == "login":
+			# verify the username and password are not empty. if they are, send an error message and repeat the loop. if not, send the message to the server
 			try:
 				if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
 					print("Invalid command.\nSyntax: login <username> <password>")
@@ -31,7 +44,9 @@ while True:
 			except:
 				print("Invalid command.\nSyntax: login <username> <password>")
 				continue
+		# if the command is 'newuser': newuser <username> <password>
 		elif command[0] == "newuser":
+			# verify the username and password are not empty. if they are, send an error message and repeat the loop. if not, send the message to the server
 			try:
 				if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
 					print("Invalid command.\nSyntax: newuser <username> <password>")
@@ -42,14 +57,20 @@ while True:
 				print("Invalid command.\nSyntax: newuser <username> <password>")
 				continue
 
+		# set check variable to True, repeat below loop until it is false
 		check = True
 		while check:
-			sockets_list = [sys.stdin, server]
-			read_sockets,write_socket, error_socket = select.select(sockets_list,[],[]) 
+			# establish inputs as the server's messages and keyboard input and listen on them
+			socketList = [sys.stdin, server]
+			readSockets,writeSocket, errorSocket = select.select(socketList,[],[]) 
 
-			for socks in read_sockets: 
-				if socks == server: 
+			for socks in readSockets: 
+				# if the message is from the server
+				if socks == server:
+					# receive the message from the server
 					message = socks.recv(2048)
+					
+					# if the message is a status message (preceded with a '|'), handle the status message.
 					if message == "|login-success":
 						print("Welcome to the Chatroom!")
 					elif message == "|login-syntaxerror":
@@ -84,20 +105,24 @@ while True:
 						server.close()
 						check = False
 						break
-					elif message == "|newuser-success-notloggedin":
+					elif message == "|newuser-success":
 						print("Successfully created user!")
 						server.close()
 						check = False
 						break
-					elif message == "|newuser-success-loggedin":
-						print("Successfully created user!")
 					elif message == "|login-currentlyloggedin":
 						print("You are already logged in!")
+					# if the message was not a status message, print it to the client
 					else:
 						print(message)
+				# if the input is from the keyboard, 
 				else:
+					# read a line from the console, strip the newline character, and split it into 3 parts as before.
 					message = sys.stdin.readline().strip("\n")
 					command = message.split(' ', 2)
+					
+					# if the command is logout, send the logout message to the server, notify the client, 
+					# wait 1 second for the server to receive the message, close the connection, and end the loop
 					if command[0] == "logout":
 						server.send("logout")
 						print("You have been logged out.")
@@ -105,20 +130,31 @@ while True:
 						server.close()
 						check = False
 						break
+					# otherwise, send the message to the server
 					else:
 						server.send(message)
 						if command[0] == "send":
+							# if the command was send all, print the message to the client console as well
 							try:
 								if command[1] == "all":
 									print("<You> " + command[2])
-#								else:
-#									print("<You to " + command[1] + "> " + command[2])
 							except:
 								continue
+	# if the command is 'who', notify the user they must be logged in to the server and repeat the loop
+	elif command[0] == 'who':
+		print("You must be logged in to the chatroom to use who!")
+		continue
+	# if the command is 'send', notify the user they must be logged in to the server and repeat the loop
+	elif command[0] == 'send':
+		print("You must be logged in to the chatroom to use send!")
+		continue
+	# if the command is 'exit', logout the user if they are connected, wait 1 second, 
+	# close the connection to the server, and shutdown the client
 	elif command[0] == "exit":
 		print("Closing Client...")
-		
 		try:
+			server.send("logout")
+			time.sleep(1)
 			server.close()
 		except:
 			pass
@@ -126,6 +162,9 @@ while True:
 		try:
 			sys.exit(0)
 		except SystemExit:
-			os._exit(0)
+			os._exit(0)		
+	# if the command was not matched, notify the client and repeat the loop
+	else:
+		print("Invalid command.")
 		
 		
