@@ -36,7 +36,7 @@ while True:
 		if command[0] == "login":
 			# verify the username and password are not empty. if they are, send an error message and repeat the loop. if not, send the message to the server
 			try:
-				if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
+				if not command[1] or not command[2]:
 					print("Invalid command.\nSyntax: login <username> <password>")
 					continue
 				else:
@@ -48,7 +48,7 @@ while True:
 		elif command[0] == "newuser":
 			# verify the username and password are not empty. if they are, send an error message and repeat the loop. if not, send the message to the server
 			try:
-				if (command[1] == "" or command[1] == None) or (command[2] == "" or command[2] == None):
+				if not command[1] or not command[2]:
 					print("Invalid command.\nSyntax: newuser <username> <password>")
 					continue
 				else:
