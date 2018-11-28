@@ -26,7 +26,6 @@ while True:
 	command = sys.stdin.readline()
 	command = command.strip('\n')
 	command = command.split(' ', 2)
-	print(command)
 
 	# if the command is 'login' or 'newuser'
 	if command[0] == "login" or command[0] == "newuser":
@@ -43,7 +42,7 @@ while True:
 				else:
 					server.send(' '.join(command))
 			except:
-				print("TestInvalid command.\nSyntax: login <username> <password>")
+				print("Invalid command.\nSyntax: login <username> <password>")
 				continue
 		# if the command is 'newuser': newuser <username> <password>
 		elif command[0] == "newuser":
