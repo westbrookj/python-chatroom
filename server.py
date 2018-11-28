@@ -249,7 +249,7 @@ while True:
 	clientList.append(conn) 
 
 	# starts a new instance of ClientThread and passes the connection as the parameter
-	start_new_thread(ClientThread, conn)	 
+	start_new_thread(ClientThread, (conn))	 
 
 conn.close() 
 server.close() 
