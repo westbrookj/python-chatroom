@@ -136,8 +136,8 @@ def ClientThread(conn, addr):
 				elif command[0] == "logout":
 					print(username + " has left the chatroom")
 					broadcast(username + " has left the chatroom", conn)
-					username = None
 					remove(conn, username)
+					username = None
 				# if the command is 'send'
 				elif command[0] == "send":
 					# verify the user is in the chatroom
