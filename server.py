@@ -224,11 +224,15 @@ def broadcast(message, connection):
 Function to remove the specified connection from the clientList and chatroomList
 """
 def remove(connection, username):
-	if (connection,username) in chatroomList: 
+	try:
 		chatroomList.remove((connection,username))
+	except:
+		print("failed to remove " + username + " from chatroomList")
 
-	if (connection,username) in clientList:
+	try:
 		clientList.remove((connection,username))
+	except:
+		print("failed to remove " + username + " from clientList")
 
 """
 Loop to listen for new connections and accept them.
