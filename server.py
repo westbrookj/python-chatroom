@@ -17,8 +17,6 @@ IPAddress = "192.168.1.10"
 # sets the port to use (1 + the last four of my ID 2905)
 port = 12905
 
-
-
 # Create clientList to track all connections to the server
 clientList = [] 
 
@@ -183,9 +181,6 @@ def ClientThread(conn, addr):
 				# if command didn't match any commands, send error message to client
 				else:
 					conn.send("|invalid-command")
-					
-				print(chatroomList)
-					
 			# if the message is empty, remove and disconnect the connection
 			else: 
 				remove(conn, username)
@@ -227,12 +222,12 @@ def remove(connection, username):
 	try:
 		chatroomList.remove((connection,username))
 	except:
-		print("failed to remove " + username + " from chatroomList")
+		pass
 
 	try:
 		clientList.remove((connection,username))
 	except:
-		print("failed to remove " + username + " from clientList")
+		pass
 
 """
 Loop to listen for new connections and accept them.
