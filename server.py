@@ -190,9 +190,9 @@ def ClientThread(conn):
 		except: 
 			continue
 
-""""
+"""
 Function to add a user to the credentials file
-""""
+"""
 def addUser(username, password):
 	# adds to credentials list
 	credentials[username] = password
