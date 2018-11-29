@@ -9,10 +9,25 @@ import select
 import sys 
 import csv
 import os
+import re
 from thread import *
 
-# sets the IP address for the server
-IPAddress = "192.168.1.10" 
+print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
+
+#obtaining the IP Address for the server to use
+while True:
+	print("Please enter the IP Address to run the server on: ")
+	IPAddress = sys.stdin.readline()
+	IPAddress = IPAddress.strip('\n')
+
+	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+	testIP = regex.match(IPAddress)
+	
+	if test:
+		break
+	else:
+		print("Invalid IP address format.")
+
 
 # sets the port to use (1 + the last four of my ID 2905)
 port = 12905
@@ -46,8 +61,6 @@ server.bind((IPAddress, port))
 
 # Begin listening for up to 5 connections (more than maxClients to allow clients to still create new users, etc.)
 server.listen(100)
-
-print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
 
 """ 
 Define the ClientThread function.

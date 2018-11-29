@@ -10,11 +10,24 @@ import sys
 import time
 import os
 
-# define the IP Address and Port of the server
-IPAddress = "192.168.1.10"
-port = 12905
-
 print("Chatroom Client (CS4850 - Lab 3)\n")
+
+# obtaining the IP Address for the server to connect to
+while True:
+	print("Please enter the IP Address of the Chatroom server: ")
+	IPAddress = sys.stdin.readline()
+	IPAddress = IPAddress.strip('\n')
+
+	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+	testIP = regex.match(IPAddress)
+	
+	if test:
+		break
+	else:
+		print("Invalid IP address format.")
+
+# define the port of the server (1 + the last four of my ID 2905)
+port = 12905
 
 while True:
 	# create the socket to connect to the server
