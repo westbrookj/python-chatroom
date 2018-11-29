@@ -9,6 +9,7 @@ import select
 import sys 
 import time
 import os
+import re
 
 print("Chatroom Client (CS4850 - Lab 3)\n")
 

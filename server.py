@@ -60,7 +60,9 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((IPAddress, port)) 
 
 # Begin listening for up to 5 connections (more than maxClients to allow clients to still create new users, etc.)
-server.listen(100)
+server.listen(5)
+
+print("Server started.")
 
 """ 
 Define the ClientThread function.
