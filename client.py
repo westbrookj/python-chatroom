@@ -13,6 +13,9 @@ import re
 
 print("Chatroom Client (CS4850 - Lab 3)\n")
 
+# define the port of the server (1 + the last four of my ID 2905)
+port = 12905
+
 # obtaining the IP Address for the server to connect to
 while True:
 	print("Please enter the IP Address of the Chatroom server: ")
@@ -34,9 +37,6 @@ while True:
 		break
 	else:
 		print("Invalid IP address format.")
-
-# define the port of the server (1 + the last four of my ID 2905)
-port = 12905
 
 while True:
 	# create the socket to connect to the server
