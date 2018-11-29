@@ -14,8 +14,11 @@ from thread import *
 
 print("Chatroom Server (CS4850 - Lab 3)\nPress CTRL-C To Exit\n")
 
-#obtaining the IP Address for the server to use
+# sets the port to use (1 + the last four of my ID 2905)
+port = 12905
+
 while True:
+	#obtaining the IP Address for the server to use
 	print("Please enter the IP Address to run the server on: ")
 	IPAddress = sys.stdin.readline()
 	IPAddress = IPAddress.strip('\n')
@@ -23,14 +26,27 @@ while True:
 	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 	testIP = regex.match(IPAddress)
 	
+	# bind and listen on socket if IP is valid
 	if testIP:
+		# Create the socket to receive connections from clients
+		server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+		# Set the socket options
+		server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+
+		try:
+			# Bind the server socket to the IP Address and Port
+			server.bind((IPAddress, port))
+		except socket.error:
+			print("Could not open the server on specified IP address, please enter the IP address of this computer.")
+			continue
+
+		# Begin listening for up to 5 connections (more than maxClients to allow clients to still create new users, etc.)
+		server.listen(5)
 		break
+	# otherwise, reprompt for a new IP
 	else:
 		print("Invalid IP address format.")
-
-
-# sets the port to use (1 + the last four of my ID 2905)
-port = 12905
 
 # Create clientList to track all connections to the server
 clientList = [] 
@@ -49,18 +65,6 @@ with open('credentials.csv') as csv_file:
 	for row in csv_reader:
 		credentials[str(row[0])] = str(row[1])
 		line_count += 1
-
-# Create the socket to receive connections from clients
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Set the socket options
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
-
-# Bind the server socket to the IP Address and Port
-server.bind((IPAddress, port)) 
-
-# Begin listening for up to 5 connections (more than maxClients to allow clients to still create new users, etc.)
-server.listen(5)
 
 print("Server started.")
 

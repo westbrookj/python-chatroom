@@ -23,6 +23,14 @@ while True:
 	testIP = regex.match(IPAddress)
 	
 	if testIP:
+		try:
+			server = socket.socket()
+			server.connect((IPAddress, port))
+		except socket.error:
+			print("Could not connect to server at IP Address: " + IPAddress)
+			continue
+			
+		server.close()
 		break
 	else:
 		print("Invalid IP address format.")
