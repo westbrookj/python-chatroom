@@ -23,7 +23,7 @@ while True:
 	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 	testIP = regex.match(IPAddress)
 	
-	if test:
+	if testIP:
 		break
 	else:
 		print("Invalid IP address format.")
