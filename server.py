@@ -23,6 +23,7 @@ while True:
 	IPAddress = sys.stdin.readline()
 	IPAddress = IPAddress.strip('\n')
 
+	# verify IP address is valid format
 	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 	testIP = regex.match(IPAddress)
 	

@@ -16,26 +16,31 @@ print("Chatroom Client (CS4850 - Lab 3)\n")
 # define the port of the server (1 + the last four of my ID 2905)
 port = 12905
 
-# obtaining the IP Address for the server to connect to
 while True:
+	# obtaining the IP Address for the server to connect to
 	print("Please enter the IP Address of the Chatroom server: ")
 	IPAddress = sys.stdin.readline()
 	IPAddress = IPAddress.strip('\n')
 
+	# verify IP address is valid format
 	regex = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 	testIP = regex.match(IPAddress)
 	
+	# if IP is valid format, verify it can be connected to (verify it is the server)
 	if testIP:
 		try:
 			server = socket.socket()
 			server.connect((IPAddress, port))
+		# if it cannot be connected to, reprompt for IP
 		except socket.error:
 			print("Could not connect to server at IP Address: " + IPAddress)
 			continue
-			
+		
+		# close the connetion if it worked
 		server.close()
 		break
 	else:
+		# if IP didn't match the regex, reprompt for IP
 		print("Invalid IP address format.")
 
 while True:
